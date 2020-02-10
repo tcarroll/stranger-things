@@ -17,6 +17,35 @@ http.get('http://api.tvmaze.com/singlesearch/shows?q=stranger-things&embed=episo
 })
 
 /**
+ * Converts an episode summary that is HTML content to a sentence with no markup.
+ * @param {string} summary HTML markup that describes an episode.
+ * @returns {string}
+ */
+const convertSummary = summary => {
+  return stripMarkup(summary.slice(0, summary.indexOf('.') + 1))
+}
+
+const stripMarkup = markup => {
+  let startTag = markup.indexOf('<')
+  if (startTag >= 0) {
+    let endTag = markup.slice(startTag + 1).indexOf('>')
+    if (endTag >= 0) {
+      return stripMarkup(markup.slice(endTag + 2))
+    }
+  }
+  return markup
+}
+
+/**
+ * Coverts an ISO date time stamp string into an epochal time number of seconds.
+ * @param {string} timestamp  An ISO data time stamp.
+ * @return {number} The epochal (in seconds) time of the given timestamp.
+ */
+const convertToEpochTime = (timestamp) => {
+  return new Date(timestamp).getTime()
+}
+
+/**
  * Converts a given numeric value to a floating point value with a number of digits after the decimal point.
  * @param {number} number A number.
  * @param {number} precision number of decimal places
@@ -45,12 +74,12 @@ const transformData = (object) => {
   let totalDurationSeconds = 0
 
   object._embedded.episodes.forEach(episode => {
-    const { airstamp, id, name, number, season } = episode
+    const { airstamp, id, name, number, season, summary } = episode
     episodes[id] = {
       sequenceNumber: `s${season}e${number}`,
       shortTitle: name.slice(name.indexOf(':') + 2),
-      airTimestamp: airstamp,
-      shortSummary: ''
+      airTimestamp: convertToEpochTime(airstamp),
+      shortSummary: convertSummary(summary || '')
     }
     if (seasonEpisodeCount.hasOwnProperty(season)) {
       seasonEpisodeCount[season]++
