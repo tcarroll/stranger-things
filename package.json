@@ -1,0 +1,19 @@
+{
+  "name": "stranger-things",
+  "version": "1.0.0",
+  "description": "Charter Communication developer test",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tcarroll/stranger-things.git"
+  },
+  "author": "Tom Carroll",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tcarroll/stranger-things/issues"
+  },
+  "homepage": "https://github.com/tcarroll/stranger-things#readme"
+}
